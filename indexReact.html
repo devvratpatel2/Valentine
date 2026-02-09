@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valentine Fireworks</title>
+
+  <!-- React & Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #fff5f8;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #root {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.1);
+      z-index: 2;
+      position: relative;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+
+    .yes {
+      background: #ff4d6d;
+      color: white;
+      font-size: 18px;
+    }
+
+    .no {
+      background: #eee;
+      color: #555;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// Fireworks with heart explosions + soft boom
+function Fireworks({ active }) {
+  const canvasRef = useRef(null);
+  const shells = useRef([]);
+  const particles = useRef([]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function boom() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = 90;
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.4);
+    }
+
+    function launchShell() {
+      shells.current.push({
+        x: Math.random() * canvas.width,
+        y: canvas.height,
+        vy: -7,
+        targetY: Math.random() * canvas.height * 0.4 + 100,
+        color: `hsl(${Math.random() * 360},100%,70%)`
+      });
+    }
+
+    function explodeHeart(shell) {
+      boom();
+      const points = 120;
+      for (let i = 0; i < points; i++) {
+        const t = (Math.PI * 2 * i) / points;
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y =
+          13 * Math.cos(t) -
+          5 * Math.cos(2 * t) -
+          2 * Math.cos(3 * t) -
+          Math.cos(4 * t);
+
+        particles.current.push({
+          x: shell.x,
+          y: shell.y,
+          vx: x * 0.15,
+          vy: -y * 0.15,
+          life: 100,
+          color: shell.color
+        });
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Move shells
+      shells.current.forEach((s, i) => {
+        s.y += s.vy;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.fill();
+
+        if (s.y <= s.targetY) {
+          explodeHeart(s);
+          shells.current.splice(i, 1);
+        }
+      });
+
+      // Move particles
+      particles.current.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05; // gravity
+        p.life--;
+
+        ctx.globalAlpha = p.life / 100;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+
+      particles.current = particles.current.filter(p => p.life > 0);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    if (active) {
+      let count = 0;
+      const interval = setInterval(() => {
+        launchShell();
+        count++;
+        if (count > 4) clearInterval(interval);
+      }, 600);
+    }
+  }, [active]);
+
+  return <canvas ref={canvasRef} />;
+}
+
+function App() {
+  const [yesScale, setYesScale] = useState(1);
+  const [noScale, setNoScale] = useState(1);
+  const [noClicks, setNoClicks] = useState(0);
+  const [accepted, setAccepted] = useState(false);
+
+  const noMessages = [
+    "Not again!",
+    "Okay but like… really?",
+    "You sure about that?",
+    "Did you forget we are married now?",
+    "Be my Valentine Kitu!! 💍"
+  ];
+
+  return (
+    <>
+      <Fireworks active={accepted} />
+      <div className="card">
+        {!accepted ? (
+          <>
+            <h2>Will you be my Valentine? 💘</h2>
+            <div className="buttons">
+              <button
+                className="yes"
+                style={{ transform: `scale(${yesScale})` }}
+                onClick={() => setAccepted(true)}
+              >
+                Yes
+              </button>
+              <button
+                className="no"
+                style={{
+                    transform: `scale(${Math.max(noScale, 0.1)})`,
+                    opacity: noClicks >= 5 ? 0 : 1, // completely invisible after 5 clicks
+                    pointerEvents: noClicks >= 5 ? 'none' : 'auto' // prevent clicks
+                }}
+                onClick={() => {
+                    if (noClicks >= 5) return;
+                    setNoClicks(n => n + 1);
+                    setYesScale(s => s + 0.15);
+                    setNoScale(s => s - 0.15);
+                }}
+                >
+                No
+                </button>
+            </div>
+            <div style={{ marginTop: 20 }}>
+              {noMessages[Math.min(noClicks, noMessages.length - 1)]}
+            </div>
+          </>
+        ) : (
+          <>
+            <h2>Correct answer 🎆</h2>
+            <p>Happy Valentine’s Day ❤️</p>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+
+</body>
+</html>
