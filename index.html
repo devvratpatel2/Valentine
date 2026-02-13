@@ -18,10 +18,8 @@
             margin: 0;
             padding: 0;
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 99%, #fad0c4 100%);
-            background-size: 300% 300%;
-            animation: gradientBG 10s ease infinite;
-            height: 100vh;
+            background: linear-gradient(135deg, #ffb3d9 0%, #ffd4e5 25%, #ffe4f0 50%, #fff5f8 75%, #ffe4f0 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,41 +27,94 @@
             position: relative;
         }
 
-        /* Polka Dots */
+        /* Cute Polka Dots & Hearts Pattern */
         body::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(#ffffff 20%, transparent 20%), radial-gradient(#ffffff 20%, transparent 20%);
-            background-position: 0 0, 10px 10px;
-            background-size: 20px 20px;
-            opacity: 0.3;
+            background-image: 
+                radial-gradient(circle, #ffffff 15%, transparent 15%),
+                radial-gradient(circle, #ffb3d9 10%, transparent 10%);
+            background-position: 0 0, 15px 15px;
+            background-size: 30px 30px;
+            opacity: 0.4;
             pointer-events: none;
             z-index: 0;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Floating hearts in background */
+        body::after {
+            content: "💕 💖 💗 💓 💝 💕 💖 💗 💓 💝 💕 💖 💗 💓 💝";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            font-size: 30px;
+            opacity: 0.15;
+            white-space: nowrap;
+            animation: scrollHearts 30s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes scrollHearts {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Sparkles floating around */
+        .sparkle-bg {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: twinkle 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 0.8; transform: scale(1) rotate(180deg); }
         }
 
         /* --- Background Assets --- */
         .walking-bear {
             position: absolute;
             bottom: 20px;
-            left: -100px;
             width: 90px;
             z-index: 1;
             opacity: 0.9;
+            filter: drop-shadow(0 5px 10px rgba(255, 107, 107, 0.3));
+            cursor: pointer;
             animation: walkAcross 25s linear infinite;
         }
+        
+        .walking-bear:hover {
+            animation-play-state: paused;
+        }
+        
         @keyframes walkAcross { 
-            0% { left: -100px; transform: scaleX(1); } 
-            48% { left: 95vw; transform: scaleX(1); } 
-            50% { left: 95vw; transform: scaleX(-1); } 
-            98% { left: -100px; transform: scaleX(-1); } 
-            100% { left: -100px; transform: scaleX(1); } 
+            0% { 
+                left: -100px; 
+                transform: scaleX(1);
+            } 
+            48% { 
+                left: calc(100vw - 50px);
+                transform: scaleX(1);
+            } 
+            50% { 
+                left: calc(100vw - 50px);
+                transform: scaleX(-1);
+            } 
+            98% { 
+                left: -100px;
+                transform: scaleX(-1);
+            } 
+            100% { 
+                left: -100px;
+                transform: scaleX(1);
+            } 
         }
 
         .peeking-cat {
@@ -72,24 +123,67 @@
             right: 50px;
             width: 100px;
             z-index: 2;
+            filter: drop-shadow(0 5px 10px rgba(255, 107, 107, 0.3));
+            cursor: pointer;
             animation: peek 6s ease-in-out infinite;
         }
+        
+        .peeking-cat:hover {
+            animation-play-state: paused;
+        }
+        
         @keyframes peek {
-            0%, 100% { transform: translateY(100px); }
-            50% { transform: translateY(0px); }
+            0%, 100% { 
+                transform: translateY(100px);
+            }
+            50% { 
+                transform: translateY(0px);
+            }
         }
 
         .floating-icon {
             position: absolute;
             font-size: 2rem;
             animation: floatUp 15s linear infinite;
-            opacity: 0.6;
+            opacity: 0;
             z-index: 0;
             user-select: none;
+            will-change: transform, opacity;
         }
         @keyframes floatUp { 
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } 
+            0% { 
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0;
+            } 
+            10% { 
+                opacity: 0.7;
+            }
+            90% { 
+                opacity: 0.7;
+            }
+            100% { 
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            } 
+        }
+
+        /* Cute bouncing hearts */
+        .bouncing-heart {
+            position: absolute;
+            font-size: 40px;
+            animation: bounceHeart 2s ease-in-out infinite;
+            opacity: 0.5;
+            z-index: 1;
+            will-change: transform;
+        }
+
+        @keyframes bounceHeart {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+            }
+            50% { 
+                transform: translateY(-15px) scale(1.05);
+            }
         }
 
         /* --- Main Card --- */
@@ -99,30 +193,65 @@
             background: var(--glass);
             border-radius: 35px;
             padding: 30px 40px;
-            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.2);
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3), 0 0 0 5px rgba(255, 255, 255, 0.5);
             text-align: center;
             border: 6px solid white;
             position: relative; 
             z-index: 10;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: floatCard 3s ease-in-out infinite;
         }
 
-        h1 { font-family: 'Quicksand', sans-serif; color: var(--primary); font-size: 2.2rem; margin: 0 0 5px 0; font-weight: 900; }
+        @keyframes floatCard {
+            0%, 100% { 
+                transform: translateY(0px);
+            }
+            50% { 
+                transform: translateY(-8px);
+            }
+        }
+
+        h1 { 
+            font-family: 'Quicksand', sans-serif; 
+            color: var(--primary); 
+            font-size: 2.2rem; 
+            margin: 0 0 5px 0; 
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(255, 107, 107, 0.2);
+            animation: titleBounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes titleBounce {
+            0%, 100% { 
+                transform: translateY(0);
+            }
+            50% { 
+                transform: translateY(-3px);
+            }
+        }
         
         .metrics-row { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
         .metric { 
             background: white; padding: 10px 20px; border-radius: 15px; 
             box-shadow: 0 5px 15px rgba(0,0,0,0.05); min-width: 80px; 
-            transition: transform 0.2s; cursor: pointer; user-select: none; 
+            transition: all 0.3s; cursor: pointer; user-select: none; 
             border: 2px solid #fff0f0;
+            position: relative;
+            overflow: hidden;
         }
-        .metric:hover { transform: scale(1.1) rotate(-2deg); border-color: var(--primary); }
+        .metric:hover { 
+            transform: scale(1.15) rotate(-3deg); 
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+        }
         
         .chart-container { 
             position: relative; height: 220px; width: 100%; 
             background: white; border-radius: 20px; padding: 10px; 
             box-sizing: border-box; margin-bottom: 20px; 
             border: 2px solid #fff0f0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .btn-container { 
@@ -138,25 +267,137 @@
             z-index: 20; 
         }
         
-        .btn-yes { background: linear-gradient(45deg, #ff6b6b, #ff8e8e); color: white; }
-        .btn-yes:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4); }
+        .btn-yes { 
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e); 
+            color: white;
+            transform-origin: center;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            50% { 
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+            }
+        }
+        
+        .btn-yes:hover { 
+            transform: scale(1.15); 
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.6);
+        }
+
+        @keyframes wiggle {
+            0%, 100% { 
+                transform: scale(1.15) rotate(0deg);
+            }
+            25% { 
+                transform: scale(1.15) rotate(-3deg);
+            }
+            50% {
+                transform: scale(1.15) rotate(0deg);
+            }
+            75% { 
+                transform: scale(1.15) rotate(3deg);
+            }
+        }
         
         /* NO Button specific styles */
         .btn-no { 
-            background: #dfe6e9; color: #636e72; 
-            transition: left 0.2s, top 0.2s; /* Smooth movement across screen */
+            background: #dfe6e9; 
+            color: #636e72; 
+            transition: all 0.3s ease;
+            will-change: transform, left, top;
+        }
+
+        .btn-no:hover {
+            transform: scale(0.95);
         }
 
         /* Overlay */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .cute-gif { max-width: 280px; border-radius: 20px; border: 5px solid var(--primary); margin: 20px; box-shadow: 0 10px 40px rgba(255, 107, 107, 0.3); }
+        .overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(135deg, rgba(255, 179, 217, 0.98), rgba(255, 228, 240, 0.98));
+            z-index: 3000; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .cute-gif { 
+            max-width: 280px; 
+            border-radius: 20px; 
+            border: 5px solid var(--primary); 
+            margin: 20px; 
+            box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
+            animation: bounceGif 1s ease-in-out infinite;
+        }
+
+        @keyframes bounceGif {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+            }
+            50% { 
+                transform: translateY(-10px) scale(1.05);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { 
+                transform: translateY(0);
+            }
+            50% { 
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Cute emoji reactions */
+        .emoji-pop {
+            position: fixed;
+            font-size: 50px;
+            animation: emojiFloat 2s ease-out forwards;
+            pointer-events: none;
+            z-index: 5000;
+        }
+
+        @keyframes emojiFloat {
+            0% { 
+                opacity: 1; 
+                transform: translateY(0) scale(0) rotate(0deg);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-40px) scale(1.2) rotate(90deg);
+            }
+            60% {
+                transform: translateY(-80px) scale(1.1) rotate(180deg);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-120px) scale(0.5) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
 
     <div id="floating-container"></div>
-    <img src="https://media.tenor.com/fTTVgygKDh4AAAAi/bear-walking-cute.gif" class="walking-bear" alt="Walking Bear">
-    <img src="https://media.tenor.com/aKFaZbrZFYkAAAAi/cat-peeking.gif" class="peeking-cat" alt="Peeking Cat">
+    <div id="sparkle-container"></div>
+    <div id="bouncing-hearts-container"></div>
+    
+    <img src="https://media.tenor.com/fTTVgygKDh4AAAAi/bear-walking-cute.gif" class="walking-bear" alt="Walking Bear" onclick="animalClick(this, '🐻')">
+    <img src="https://media.tenor.com/aKFaZbrZFYkAAAAi/cat-peeking.gif" class="peeking-cat" alt="Peeking Cat" onclick="animalClick(this, '😻')">
 
     <div class="container" id="mainCard">
         <h1>Official Love Report 💖</h1>
@@ -185,28 +426,59 @@
         
         <div class="btn-container">
             <button class="btn-yes" id="yesBtn" onclick="acceptLove()">Fine, yes!</button>
-            <button class="btn-no" id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+            <button class="btn-no" id="noBtn" onmouseover="runAway()" ontouchstart="runAway()">No</button>
         </div>
     </div>
 
     <div class="overlay" id="overlay">
-        <h1 style="color: #ff6b6b; font-size: 3rem; margin-bottom: 0;">YAYYYYY! 🎉</h1>
+        <h1 style="color: #ff6b6b; font-size: 3rem; margin-bottom: 0; animation: bounce 1s ease-in-out infinite;">YAYYYYY! 🎉</h1>
         <p style="font-size: 1.4rem; color: #2d3436; margin-top: 10px;">The contract is sealed! 💍</p>
         <img src="https://media.tenor.com/gUiu1zyxfzYAAAAC/bear-kiss-bear-kisses.gif" class="cute-gif" alt="Kisses">
         <br>
-        <button class="btn-yes" onclick="location.reload()">Replay Moment</button>
+        <button class="btn-yes" onclick="if(window.stopFireworks) window.stopFireworks(); location.reload();">Replay Moment</button>
     </div>
 
     <script>
-        // Background Icons
+        // Create sparkles in background
+        const sparkleContainer = document.getElementById('sparkle-container');
+        for (let i = 0; i < 20; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle-bg');
+            sparkle.innerText = '✨';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            sparkleContainer.appendChild(sparkle);
+        }
+
+        // Create bouncing hearts in corners
+        const bouncingHeartsContainer = document.getElementById('bouncing-hearts-container');
+        const heartPositions = [
+            { left: '5%', top: '10%' },
+            { right: '5%', top: '10%' },
+            { left: '5%', bottom: '10%' },
+            { right: '5%', bottom: '10%' }
+        ];
+        
+        heartPositions.forEach((pos, i) => {
+            const heart = document.createElement('div');
+            heart.classList.add('bouncing-heart');
+            heart.innerText = ['💕', '💖', '💗', '💓'][i];
+            Object.assign(heart.style, pos);
+            heart.style.animationDelay = (i * 0.5) + 's';
+            bouncingHeartsContainer.appendChild(heart);
+        });
+
+        // Background floating Icons
         const floatContainer = document.getElementById('floating-container');
-        const icons = ['🌸', '🧋', '🐾', '🎀', '🧁', '💖', '✨'];
-        for (let i = 0; i < 25; i++) {
+        const icons = ['🌸', '🧋', '🐾', '🎀', '🧁', '💖', '✨', '🌺', '🦋', '🍓'];
+        for (let i = 0; i < 30; i++) {
             const el = document.createElement('div');
             el.classList.add('floating-icon');
             el.innerText = icons[Math.floor(Math.random() * icons.length)];
             el.style.left = Math.random() * 100 + 'vw';
             el.style.animationDuration = (Math.random() * 10 + 10) + 's'; 
+            el.style.animationDelay = Math.random() * 5 + 's';
             el.style.fontSize = (Math.random() * 20 + 20) + 'px';
             floatContainer.appendChild(el);
         }
@@ -239,46 +511,218 @@
             }
         });
 
-        // Interactions
+        // Emoji popup function
+        function showEmojiPop(emoji, x, y) {
+            const emojiEl = document.createElement('div');
+            emojiEl.className = 'emoji-pop';
+            emojiEl.innerText = emoji;
+            emojiEl.style.left = x + 'px';
+            emojiEl.style.top = y + 'px';
+            document.body.appendChild(emojiEl);
+            setTimeout(() => emojiEl.remove(), 2000);
+        }
+
+        // Metric click interaction
         function popHeart(e) {
             const rect = e.target.getBoundingClientRect();
             confetti({
-                particleCount: 20, spread: 50,
-                origin: { x: (rect.left + rect.width/2)/window.innerWidth, y: (rect.top + rect.height/2)/window.innerHeight },
-                colors: ['#ff6b6b', '#ff9e9e', '#fdcb6e'], zIndex: 3000
+                particleCount: 30, 
+                spread: 60,
+                origin: { 
+                    x: (rect.left + rect.width/2)/window.innerWidth, 
+                    y: (rect.top + rect.height/2)/window.innerHeight 
+                },
+                colors: ['#ff6b6b', '#ff9e9e', '#fdcb6e', '#ffb3d9'], 
+                zIndex: 3000
+            });
+            
+            showEmojiPop('💕', rect.left + rect.width/2, rect.top);
+        }
+
+        // Animal click interaction
+        function animalClick(element, emoji) {
+            const rect = element.getBoundingClientRect();
+            showEmojiPop(emoji, rect.left + rect.width/2, rect.top);
+            
+            confetti({
+                particleCount: 25,
+                spread: 70,
+                origin: { 
+                    x: (rect.left + rect.width/2)/window.innerWidth, 
+                    y: (rect.top + rect.height/2)/window.innerHeight 
+                },
+                colors: ['#ffb3d9', '#ffd4e5', '#ffe4f0'],
             });
         }
 
-        // --- BUTTON LOGIC (WHOLE SCREEN) ---
+        // --- NO BUTTON LOGIC (Runs away across whole screen) ---
         const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        let dodgeCount = 0;
+        const funnyPhrases = [
+            "Nope!", 
+            "Too Slow!", 
+            "Try Again!", 
+            "Missed Me!", 
+            "Not today! 😝",
+            "Catch me! 🏃",
+            "Hehe! 😜",
+            "Nice try! 💨",
+            "You wish! 😆",
+            "Almost! 🤭"
+        ];
 
-        function moveButton() {
-            // Screen Dimensions
+        function runAway() {
+            dodgeCount++;
+            
+            // Make Yes button bigger each time
+            const newScale = Math.min(1 + (dodgeCount * 0.15), 2);
+            yesBtn.style.transform = `scale(${newScale})`;
+            
+            // Calculate random position on screen
             const maxX = window.innerWidth - noBtn.offsetWidth - 20;
             const maxY = window.innerHeight - noBtn.offsetHeight - 20;
-
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
-
-            // Apply Fixed Position to break out of container
-            noBtn.style.position = 'fixed';
-            noBtn.style.zIndex = '1000'; // High Z-Index to stay on top
-            noBtn.style.left = Math.max(10, randomX) + 'px';
-            noBtn.style.top = Math.max(10, randomY) + 'px';
             
-            // Random Text
-            const phrases = ["Nope!", "Too Slow!", "Try Again!", "Missed Me!"];
-            noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+            const randomX = Math.max(20, Math.random() * maxX);
+            const randomY = Math.max(20, Math.random() * maxY);
+            
+            // Make button run away (fixed position to escape container)
+            noBtn.style.position = 'fixed';
+            noBtn.style.zIndex = '1000';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            
+            // Change button text
+            noBtn.innerText = funnyPhrases[Math.floor(Math.random() * funnyPhrases.length)];
+            
+            // Show emoji at button's new position
+            showEmojiPop(['😝', '🏃', '💨', '😜'][Math.floor(Math.random() * 4)], randomX, randomY);
+            
+            // Small confetti burst
+            confetti({
+                particleCount: 10,
+                spread: 50,
+                origin: { 
+                    x: randomX / window.innerWidth, 
+                    y: randomY / window.innerHeight 
+                },
+                colors: ['#dfe6e9', '#b2bec3']
+            });
         }
 
         function acceptLove() {
-            const duration = 2000; const end = Date.now() + duration;
+            // EPIC FIREWORKS CELEBRATION! 🎆
+            const colors = ['#ff6b6b', '#ff9e9e', '#ffb3d9', '#ffd4e5', '#ffd700', '#ff1493'];
+            let fireworksRunning = true;
+            
+            // Big burst at the start
+            confetti({
+                particleCount: 100,
+                spread: 160,
+                origin: { y: 0.6 },
+                colors: colors,
+                zIndex: 5000
+            });
+            
+            // Continuous side cannons that run forever
             (function frame() {
-                confetti({ particleCount: 10, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff6b6b', '#ff9e9e'] });
-                confetti({ particleCount: 10, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff6b6b', '#ff9e9e'] });
-                if (Date.now() < end) requestAnimationFrame(frame);
+                if (!fireworksRunning) return;
+                
+                confetti({ 
+                    particleCount: 3, 
+                    angle: 60, 
+                    spread: 55, 
+                    origin: { x: 0 }, 
+                    colors: colors,
+                    zIndex: 5000
+                });
+                confetti({ 
+                    particleCount: 3, 
+                    angle: 120, 
+                    spread: 55, 
+                    origin: { x: 1 }, 
+                    colors: colors,
+                    zIndex: 5000
+                });
+                
+                requestAnimationFrame(frame);
             }());
-            setTimeout(() => { document.getElementById('overlay').style.display = 'flex'; }, 500);
+            
+            // Firework bursts from random positions
+            function randomFirework() {
+                if (!fireworksRunning) return;
+                
+                const x = Math.random();
+                const y = Math.random() * 0.5;
+                
+                confetti({
+                    particleCount: 50,
+                    spread: 100,
+                    origin: { x, y },
+                    colors: colors,
+                    gravity: 1.2,
+                    scalar: 1.2,
+                    zIndex: 5000
+                });
+                
+                // Schedule next firework at random interval
+                setTimeout(randomFirework, Math.random() * 400 + 300);
+            }
+            
+            // Start the random fireworks loop
+            setTimeout(randomFirework, 500);
+            
+            // Hearts explosion loop
+            function heartsExplosion() {
+                if (!fireworksRunning) return;
+                
+                confetti({
+                    particleCount: 60,
+                    spread: 360,
+                    origin: { x: 0.5, y: 0.5 },
+                    colors: ['#ff1493', '#ff69b4', '#ffc0cb'],
+                    shapes: ['circle'],
+                    scalar: 2,
+                    zIndex: 5000
+                });
+                
+                // Repeat hearts every 2 seconds
+                setTimeout(heartsExplosion, 2000);
+            }
+            
+            // Start hearts after overlay appears
+            setTimeout(heartsExplosion, 1500);
+            
+            // Big burst loop
+            function bigBurst() {
+                if (!fireworksRunning) return;
+                
+                confetti({
+                    particleCount: 120,
+                    spread: 200,
+                    origin: { y: 0.6, x: 0.5 },
+                    colors: colors,
+                    gravity: 0.8,
+                    scalar: 1.5,
+                    zIndex: 5000
+                });
+                
+                // Repeat big burst every 3 seconds
+                setTimeout(bigBurst, 3000);
+            }
+            
+            // Start big bursts
+            setTimeout(bigBurst, 2000);
+            
+            // Show overlay
+            setTimeout(() => { 
+                document.getElementById('overlay').style.display = 'flex'; 
+            }, 800);
+            
+            // Stop fireworks when replay is clicked (page reloads anyway, but clean)
+            window.stopFireworks = function() {
+                fireworksRunning = false;
+            };
         }
     </script>
 </body>
